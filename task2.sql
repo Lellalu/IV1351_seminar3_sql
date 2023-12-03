@@ -1,13 +1,11 @@
-CREATE MATERIALIZED VIEW lessons_of_instructor AS
-SELECT lesson_schedule.instructor_id, COUNT(*)
-FROM lesson_schedule
-LEFT JOIN instructor ON lesson_schedule.instructor_id = instructor.id
-WHERE date_part('month', current_date) = date_part('month', lesson_schedule.end_time)
-GROUP BY lesson_schedule.instructor_id
-HAVING COUNT(*) > 3;
+CREATE OR REPLACE VIEW sibling_counts AS
+SELECT COUNT(siblings.student_id) AS num_of_siblings
+FROM student
+LEFT JOIN siblings on student.id = siblings.student_id
+GROUP BY student.id
+HAVING COUNT(siblings.student_id) <= 2;
 
-
-SELECT lessons_of_instructor.instructor_id AS "Instructor Id", person.name AS name, lessons_of_instructor.count AS "No of Lessons"
-FROM lessons_of_instructor
-LEFT JOIN instructor on lessons_of_instructor.instructor_id=instructor.id 
-LEFT JOIN person on person.id = instructor.person_id;
+SELECT sibling_counts.num_of_siblings AS "No of Siblings", COUNT(*) AS "No of Students"
+FROM sibling_counts
+GROUP BY sibling_counts.num_of_siblings
+ORDER BY sibling_counts.num_of_siblings;

@@ -56,6 +56,7 @@ CREATE TABLE person (
  id INT NOT NULL,
  person_number VARCHAR(12) NOT NULL,
  name VARCHAR(50) NOT NULL,
+ email VARCHAR(50) NOT NULL,
  city VARCHAR(50),
  zip VARCHAR(5),
  street VARCHAR(100)
